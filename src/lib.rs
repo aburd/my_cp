@@ -1,7 +1,7 @@
 use std::fs::{self, File};
 use std::io::prelude::*;
 use std::io::{BufWriter, Result};
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 pub fn execute(source_path: impl Into<PathBuf>, target_path: impl Into<PathBuf>) -> Result<usize> {
     let bytes = fs::read(source_path.into())?;
