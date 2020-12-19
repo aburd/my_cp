@@ -1,6 +1,6 @@
 use std::env;
-use std::path::{Path, PathBuf};
 use std::io::Result;
+use std::path::{Path, PathBuf};
 
 fn main() -> Result<()> {
     let command = get_command()?;
@@ -16,14 +16,14 @@ struct Command {
 
 fn get_command() -> Result<Command> {
     let mut args = env::args();
-    let from_path: PathBuf = args.nth(1).expect("From path is a required argument").into();
+    let from_path: PathBuf = args
+        .nth(1)
+        .expect("From path is a required argument")
+        .into();
     let to_path = match args.nth(2) {
         Some(p) => p.into(),
         None => Path::new("./").to_path_buf(),
     };
     // from_path
-    Ok(Command {
-        from_path,
-        to_path,
-    })
+    Ok(Command { from_path, to_path })
 }
