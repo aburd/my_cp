@@ -1,22 +1,28 @@
 use std::env;
-use std::io::{Error, ErrorKind, Result};
+use std::io::Result;
 use std::path::PathBuf;
 
 fn main() -> Result<()> {
-    let (source_path, target_path, options) = get_command()?;
-
-    let byte_count = if options.contains(&"-R".to_owned()) {
-        my_cp::copy_dir(&source_path, &target_path)?
-    } else {
-        my_cp::copy_file(&source_path, &target_path)?
+    let (source_path, target_path, options) = match get_command() {
+        Ok(args) => args,
+        Err(e) => {
+            eprintln!("{}", e);
+            print_help();
+            std::process::exit(1);
+        }
     };
 
-    println!(
-        "Copied {} bytes from {} to {}",
-        byte_count,
-        source_path.to_str().unwrap(),
-        target_path.to_str().unwrap(),
-    );
+    if options.contains(&"-R".to_owned()) {
+        my_cp::copy_dir(&source_path, &target_path)?
+    } else {
+        let byte_count = my_cp::copy_file(&source_path, &target_path)?;
+        println!(
+            "Copied {} bytes from {} to {}",
+            byte_count,
+            source_path.to_str().unwrap(),
+            target_path.to_str().unwrap(),
+        );
+    };
 
     Ok(())
 }
