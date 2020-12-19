@@ -24,9 +24,8 @@ fn get_command() -> Result<(PathBuf, PathBuf, Vec<String>)> {
     let mut args = env::args();
     args.next();
 
-    let options: Vec<String> = get_options().unwrap_or(Vec::new());
+    let options: Vec<String> = get_options().unwrap_or_default();
     let non_options: Vec<_> = args
-        .map(|a| a.to_string())
         .filter(|s| !s.starts_with('-'))
         .collect();
     let source_path: PathBuf = non_options
@@ -44,7 +43,6 @@ fn get_command() -> Result<(PathBuf, PathBuf, Vec<String>)> {
 fn get_options() -> Option<Vec<String>> {
     let valid_options: Vec<_> = ["-R"].to_vec();
     let options: Vec<String> = env::args()
-        .map(|a| a.to_string())
         .filter(|s| s.starts_with('-'))
         .collect();
 
