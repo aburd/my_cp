@@ -3,7 +3,11 @@ use std::io::prelude::*;
 use std::io::{BufWriter, Result};
 use std::path::PathBuf;
 
-pub fn copy_dir(source_path: impl Into<PathBuf>, target_path: impl Into<PathBuf>, verbose: bool) -> Result<()> {
+pub fn copy_dir(
+    source_path: impl Into<PathBuf>,
+    target_path: impl Into<PathBuf>,
+    verbose: bool,
+) -> Result<()> {
     let source_path = source_path.into();
     let target_path = target_path.into();
 
@@ -37,6 +41,9 @@ pub fn copy_file(
     let source_path = source_path.into();
     let target_path = target_path.into();
 
+    if source_path == target_path {
+        return Ok(0);
+    }
     if source_path.is_dir() {
         panic!("SOURCE_PATH may not be a directory when copying a file");
     }
@@ -52,12 +59,12 @@ pub fn copy_file(
     let byte_count = bytes.len();
 
     if verbose {
-      println!(
-          "Copied {} bytes from {} to {}",
-          byte_count,
-          source_path.to_str().unwrap(),
-          target_path.to_str().unwrap(),
-      );
+        println!(
+            "Copied {} bytes from {} to {}",
+            byte_count,
+            source_path.to_str().unwrap(),
+            target_path.to_str().unwrap(),
+        );
     }
 
     Ok(byte_count)

@@ -9,7 +9,7 @@ fn main() -> Result<()> {
         if source_path.is_file() || target_path.is_file() {
             print_invalid_usage("Both SOURCE_PATH and TARGET_PATH must be directories.");
         }
-        my_cp::copy_dir(&source_path, &target_path, true)?
+        my_cp::copy_dir(&source_path, &target_path, true)?;
     } else {
         if source_path.is_dir() || target_path.is_dir() {
             print_invalid_usage("Both SOURCE_PATH and TARGET_PATH must be files.");
@@ -25,10 +25,14 @@ fn get_command() -> Result<(PathBuf, PathBuf, Vec<String>)> {
     args.next();
 
     let options: Vec<String> = get_options().unwrap_or(Vec::new());
-    let non_options: Vec<_> = args.map(|a| a.to_string())
+    let non_options: Vec<_> = args
+        .map(|a| a.to_string())
         .filter(|s| !s.starts_with('-'))
         .collect();
-    let source_path: PathBuf = non_options.get(0).expect("TARGET_PATH is a required argument").into();
+    let source_path: PathBuf = non_options
+        .get(0)
+        .expect("TARGET_PATH is a required argument")
+        .into();
 
     let target_path: PathBuf = match non_options.get(1) {
         Some(p) => p.into(),
@@ -46,7 +50,7 @@ fn get_options() -> Option<Vec<String>> {
 
     for option in &options {
         if !valid_options.contains(&option.as_str()) {
-            return None;
+            print_invalid_usage("Invalid argument given");
         }
     }
 
@@ -54,7 +58,12 @@ fn get_options() -> Option<Vec<String>> {
 }
 
 fn print_help() {
-    println!("usage: my_cp source_file target_file");
+    println!(
+        "
+        usage: my_cp source_file target_file
+               my_cp -R source_dir target_dir
+    "
+    );
 }
 
 fn print_invalid_usage(msg: &str) {
