@@ -34,11 +34,12 @@ fn execute() -> Result<usize> {
 
 fn get_command() -> Result<Command> {
     let mut args = env::args();
+    args.next();
     let source_path: PathBuf = args
-        .nth(1)
+        .next()
         .expect("TARGET_PATH is a required argument")
         .into();
-    let target_path = match args.nth(2) {
+    let target_path = match args.next() {
         Some(p) => p.into(),
         None => Path::new("./").to_path_buf(),
     };
